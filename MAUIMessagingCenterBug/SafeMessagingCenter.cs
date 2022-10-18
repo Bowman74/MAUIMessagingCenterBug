@@ -142,7 +142,7 @@ namespace MAUIMessagingCenterBug
             else
             {
                 returnValue = _semaphore.Wait(_waitTimeoutMiliseconds) ? LockState.Success : LockState.Failed;
-                if (returnValue != LockState.Success)
+                if (returnValue == LockState.Success)
                 {
                     _currentThreadId = Thread.CurrentThread.ManagedThreadId;
                 }
