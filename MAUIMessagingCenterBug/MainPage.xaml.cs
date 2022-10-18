@@ -39,8 +39,10 @@ public partial class MainPage : ContentPage
                     try
                     {
                         //Debug.Print($"Running Messaigng center operations on thread: {Thread.CurrentThread.ManagedThreadId}");
-                        MessagingCenter.Subscribe<MainPage, string>(this, $"test{1}", (a, b) => { });
-                        MessagingCenter.Unsubscribe<MainPage, string>(this, $"test{1}");
+                        MessagingCenter.Subscribe<MainPage, string>(this, $"test{0}", (a, b) => {
+                            MessagingCenter.Unsubscribe<MainPage, string>(this, $"test{0}");
+                        });
+                        MessagingCenter.Send<MainPage, string>(this, $"test{0}", "foo");
                     }
                     catch (Exception ex2)
                     {
@@ -72,7 +74,9 @@ public partial class MainPage : ContentPage
                     {
                         //Debug.Print($"Running Messaigng center operations on thread: {Thread.CurrentThread.ManagedThreadId}");
                         SafeMessagingCenter.Instance.Subscribe<MainPage, string>(this, $"test{0}", (a, b) => { });
+                        Debug.Print($"About to unsubscribe on thread: {Thread.CurrentThread.ManagedThreadId}");
                         SafeMessagingCenter.Instance.Unsubscribe<MainPage, string>(this, $"test{0}");
+                        Debug.Print($"Unsubscribed on thread: {Thread.CurrentThread.ManagedThreadId}");
                     }
                     catch (Exception ex)
                     {
@@ -88,8 +92,12 @@ public partial class MainPage : ContentPage
                     try
                     {
                         //Debug.Print($"Running Messaigng center operations on thread: {Thread.CurrentThread.ManagedThreadId}");
-                        SafeMessagingCenter.Instance.Subscribe<MainPage, string>(this, $"test{0}", (a, b) => { });
-                        SafeMessagingCenter.Instance.Unsubscribe<MainPage, string>(this, $"test{0}");
+                        SafeMessagingCenter.Instance.Subscribe<MainPage, string>(this, $"test{0}", (a, b) => {
+                            Debug.Print($"About to internal unsubscribe on thread: {Thread.CurrentThread.ManagedThreadId}");
+                            SafeMessagingCenter.Instance.Unsubscribe<MainPage, string>(this, $"test{0}");
+                            Debug.Print($"Internal unsubscribed on thread: {Thread.CurrentThread.ManagedThreadId}");
+                        });
+                        SafeMessagingCenter.Instance.Send<MainPage, string>(this, $"test{0}", "foo");
                     }
                     catch (Exception ex)
                     {
